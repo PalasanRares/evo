@@ -2,16 +2,16 @@
 #include "SDL_image.h"
 #include "SDL_ttf.h"
 #include <iostream>
-#include <vector>
 #include <cstdlib>
 
 #include "RenderWindow.hpp"
 #include "model/Creature.hpp"
+#include "service/Generation.hpp"
 
 using namespace std;
 
 int main(int argc, char** argv) {
-	const char* title = "Evo 0.0.2";
+	const char* title = "Evo 0.0.3";
 	const int width = 1000;
 	const int height = 500;
 	RenderWindow* window = new RenderWindow(title, width, height);
@@ -19,10 +19,7 @@ int main(int argc, char** argv) {
 
 	SDL_Event event;
 
-	vector<Creature*> creatures;
-	for (int i = 0; i < 18; i++) {
-		creatures.push_back(new Creature(rand() % width, rand() % height));
-	}
+	Generation* generation = new Generation(width, height, 20);
 
 	while (running) {
 		uint32_t time = SDL_GetTicks();
@@ -37,10 +34,7 @@ int main(int argc, char** argv) {
 
 		window->clear();
 
-		for (int i = 0; i < 18; i++) {
-			creatures.at(i)->update();
-			window->drawCreature(creatures.at(i));
-		}
+		window->renderGeneration(generation);
 
 		window->display();
 

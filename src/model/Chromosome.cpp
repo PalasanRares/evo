@@ -2,14 +2,24 @@
 
 #include <cstdlib>
 
+#define SIZE_MODIFIER 3
+
 using namespace std;
 
-Chromosome::Chromosome(float speed, float strength, float size) : speed(speed), strength(strength), size(size) {}
+void Chromosome::generateColor() {
+    this->color.r = this->speed * 255;
+    this->color.g = this->size * 255 / SIZE_MODIFIER;
+    this->color.b = this->strength * 255;
+}
+
+Chromosome::Chromosome(float speed, float strength, float size) : speed(speed), strength(strength), size(size) {
+    generateColor();
+}
 
 Chromosome* Chromosome::generate() {
     float speed = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
     float strength = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-    float size = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+    float size = static_cast <float> (rand()) / static_cast <float> (RAND_MAX) * SIZE_MODIFIER;
     return new Chromosome(speed, strength, size);
 }
 
@@ -23,4 +33,8 @@ float Chromosome::getStrength() {
 
 float Chromosome::getSize() {
     return this->size;
+}
+
+Color Chromosome::getColor() {
+    return this->color;
 }

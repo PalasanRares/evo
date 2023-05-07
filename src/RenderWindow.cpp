@@ -2,6 +2,37 @@
 
 #include <iostream>
 
+void RenderWindow::drawCreature(Creature* creature) {
+
+	float radius = creature->getChromosome()->getSize();
+
+	float x = radius;
+	float y = 0;
+	float err = 0;
+
+	Color creatureColor = creature->getChromosome()->getColor();
+	SDL_SetRenderDrawColor(renderer, creatureColor.r, creatureColor.g, creatureColor.b, 255);
+
+	while (x >= y) {
+		SDL_RenderDrawLineF(renderer, creature->getX(), creature->getY(), creature->getX() + x, creature->getY() + y);
+		SDL_RenderDrawLineF(renderer, creature->getX(), creature->getY(), creature->getX() + y, creature->getY() + x);
+		SDL_RenderDrawLineF(renderer, creature->getX(), creature->getY(), creature->getX() - y, creature->getY() + x);
+		SDL_RenderDrawLineF(renderer, creature->getX(), creature->getY(), creature->getX() - x, creature->getY() + y);
+		SDL_RenderDrawLineF(renderer, creature->getX(), creature->getY(), creature->getX() - x, creature->getY() - y);
+		SDL_RenderDrawLineF(renderer, creature->getX(), creature->getY(), creature->getX() - y, creature->getY() - x);
+		SDL_RenderDrawLineF(renderer, creature->getX(), creature->getY(), creature->getX() + y, creature->getY() - x);
+		SDL_RenderDrawLineF(renderer, creature->getX(), creature->getY(), creature->getX() + x, creature->getY() - y);
+
+		if (err <= 0) {
+			y += 1;
+			err += 2 * y + 1;
+		} else {
+			x -= 1;
+			err -= 2 * x + 1;
+		}
+	}
+}
+
 RenderWindow::RenderWindow(const char* title, int width, int height) : window(nullptr), renderer(nullptr) {
 	window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN);
 	if (window == nullptr) {
@@ -29,33 +60,10 @@ void RenderWindow::display() {
 	SDL_RenderPresent(renderer);
 }
 
-void RenderWindow::drawCreature(Creature* creature) {
-
-	// TODO replace with creature size in future
-	float radius = creature->getChromosome()->getSize() * 2;
-
-	float x = radius;
-	float y = 0;
-	float err = 0;
-
-	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-
-	while (x >= y) {
-		SDL_RenderDrawLineF(renderer, creature->getX(), creature->getY(), creature->getX() + x, creature->getY() + y);
-		SDL_RenderDrawLineF(renderer, creature->getX(), creature->getY(), creature->getX() + y, creature->getY() + x);
-		SDL_RenderDrawLineF(renderer, creature->getX(), creature->getY(), creature->getX() - y, creature->getY() + x);
-		SDL_RenderDrawLineF(renderer, creature->getX(), creature->getY(), creature->getX() - x, creature->getY() + y);
-		SDL_RenderDrawLineF(renderer, creature->getX(), creature->getY(), creature->getX() - x, creature->getY() - y);
-		SDL_RenderDrawLineF(renderer, creature->getX(), creature->getY(), creature->getX() - y, creature->getY() - x);
-		SDL_RenderDrawLineF(renderer, creature->getX(), creature->getY(), creature->getX() + y, creature->getY() - x);
-		SDL_RenderDrawLineF(renderer, creature->getX(), creature->getY(), creature->getX() + x, creature->getY() - y);
-
-		if (err <= 0) {
-			y += 1;
-			err += 2 * y + 1;
-		} else {
-			x -= 1;
-			err -= 2 * x + 1;
-		}
+void RenderWindow::renderGeneration(Generation* generation) {
+	Creature** creaturePool = generation->getCreaturePool();
+	for (int i = 0; i < generation->getNoCreatures(); i++) {
+		creaturePool[i]->update();
+		this->drawCreature(creaturePool[i]);
 	}
 }

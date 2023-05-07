@@ -4,6 +4,7 @@
 #include "SDL_ttf.h"
 
 #include "model/Creature.hpp"
+#include "service/Generation.hpp"
 
 using namespace std;
 
@@ -13,6 +14,8 @@ private:
 	SDL_Renderer* renderer;
 	TTF_Font* font;
 
+	void drawCreature(Creature* creature);
+
 public:
 	RenderWindow(const char* title, int width, int height);
 	~RenderWindow();
@@ -20,5 +23,5 @@ public:
 	void clear();
 	void display();
 
-	void drawCreature(Creature* creature);
+	void renderGeneration(Generation* generation);
 };
