@@ -10,8 +10,9 @@ void Creature::generatePointTowards() {
 }
 
 // Constructors
-Creature::Creature(float x, float y, float speed) : x(x), y(y), speed(speed) {
+Creature::Creature(float x, float y) : x(x), y(y) {
     generatePointTowards();
+    this->chromosome = Chromosome::generate();
 }
 
 // Getters
@@ -23,8 +24,8 @@ float Creature::getY() {
     return this->y;
 }
 
-float Creature::getSpeed() {
-    return this->speed;
+Chromosome* Creature::getChromosome() {
+    return this->chromosome;
 }
 
 // Setters
@@ -36,16 +37,12 @@ void Creature::setY(float y) {
     this->y = y;
 }
 
-void Creature::setSpeed(float speed) {
-    this->speed = speed;
-}
-
 void Creature::update() {
     float dx = xTowards - x;
     float dy = yTowards - y;
     float distance = sqrt(dx * dx + dy * dy);
 
-    float time = distance / speed;
+    float time = distance / chromosome->getSpeed();
 
     if (abs(x - xTowards) >= 0.1f) {
         x = x + dx / time;

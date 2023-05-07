@@ -9,7 +9,7 @@
 using namespace std;
 
 int main(int argc, char** argv) {
-	const char* title = "Evo 0.0.1";
+	const char* title = "Evo 0.0.2";
 	const int width = 1000;
 	const int height = 500;
 	RenderWindow* window = new RenderWindow(title, width, height);
@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
 
 	SDL_Event event;
 
-	Creature* testCreature = new Creature(width / 2, height / 2, 0.5f);
+	Creature* testCreature = new Creature(width / 2, height / 2);
 
 	while (running) {
 		uint32_t time = SDL_GetTicks();

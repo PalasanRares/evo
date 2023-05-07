@@ -1,10 +1,12 @@
 #pragma once
 
+#include "model/Chromosome.hpp"
+
 class Creature {
 private:
     float x;
     float y;
-    float speed;
+    Chromosome* chromosome;
 
     float xTowards;
     float yTowards;
@@ -13,17 +15,16 @@ private:
 
 public:
     // Constructors
-    Creature(float x, float y, float speed);
+    Creature(float x, float y);
 
     // Getters
     float getX();
     float getY();
-    float getSpeed();
+    Chromosome* getChromosome();
 
     // Setters
     void setX(float x);
     void setY(float y);
-    void setSpeed(float speed);
 
     void update();
 };
