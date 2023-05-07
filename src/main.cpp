@@ -2,6 +2,8 @@
 #include "SDL_image.h"
 #include "SDL_ttf.h"
 #include <iostream>
+#include <vector>
+#include <cstdlib>
 
 #include "RenderWindow.hpp"
 #include "model/Creature.hpp"
@@ -17,7 +19,10 @@ int main(int argc, char** argv) {
 
 	SDL_Event event;
 
-	Creature* testCreature = new Creature(width / 2, height / 2);
+	vector<Creature*> creatures;
+	for (int i = 0; i < 18; i++) {
+		creatures.push_back(new Creature(rand() % width, rand() % height));
+	}
 
 	while (running) {
 		uint32_t time = SDL_GetTicks();
@@ -32,8 +37,10 @@ int main(int argc, char** argv) {
 
 		window->clear();
 
-		testCreature->update();
-		window->drawCreature(testCreature);
+		for (int i = 0; i < 18; i++) {
+			creatures.at(i)->update();
+			window->drawCreature(creatures.at(i));
+		}
 
 		window->display();
 

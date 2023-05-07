@@ -21,7 +21,7 @@ RenderWindow::~RenderWindow() {
 }
 
 void RenderWindow::clear() {
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+	SDL_SetRenderDrawColor(renderer, 0, 125, 0, 255);
 	SDL_RenderClear(renderer);
 }
 
@@ -32,13 +32,13 @@ void RenderWindow::display() {
 void RenderWindow::drawCreature(Creature* creature) {
 
 	// TODO replace with creature size in future
-	float radius = 2;
+	float radius = creature->getChromosome()->getSize() * 2;
 
 	float x = radius;
 	float y = 0;
 	float err = 0;
 
-	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 
 	while (x >= y) {
 		SDL_RenderDrawLineF(renderer, creature->getX(), creature->getY(), creature->getX() + x, creature->getY() + y);
