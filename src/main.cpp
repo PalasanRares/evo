@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
 	Generation* generation = new Generation(width, height, 20, 10);
 
 	while (running) {
-		uint32_t time = SDL_GetTicks();
+		Uint64 start = SDL_GetPerformanceCounter();
 
 		while (SDL_PollEvent(&event)) {
 			switch (event.type) {
@@ -38,9 +38,9 @@ int main(int argc, char** argv) {
 
 		window->display();
 
-		if ((SDL_GetTicks() - time) < 10) {
-			SDL_Delay(10);
-		}
+		Uint64 end = SDL_GetPerformanceCounter();
+		float elapsedTime = (end - start) / (float)SDL_GetPerformanceFrequency() * 1000.0f;
+		SDL_Delay(floor(33.333f - elapsedTime));
 	}
 
 	delete window;

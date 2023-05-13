@@ -1,6 +1,7 @@
 #include "RenderWindow.hpp"
 
 #include <iostream>
+#include <cmath>
 
 void RenderWindow::drawCreature(Creature* creature) {
 
@@ -63,6 +64,23 @@ void RenderWindow::drawFoodSource(Food* foodSource) {
 	}
 }
 
+float distanceBetweenTwoPoints(float x1, float y1, float x2, float y2) {
+	return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+}
+
+void RenderWindow::checkCollision(Generation* generation) {
+	for (int i = 0; i < generation->getNoCreatures(); i++) {
+		Creature* creature = generation->getCreaturePool()[i];
+		for (int j = 0; j < generation->getNoFoodSources(); j++) {
+			Food* foodSource = generation->getFoodSources()[j];
+			if (distanceBetweenTwoPoints(creature->getX(), creature->getY(), foodSource->getX(), foodSource->getY()) <= creature->getChromosome()->getSize() + foodSource->getCapacity()) {
+				creature->consumeFood();
+				foodSource->decreaseCapacity();
+			}
+		}
+	}
+}
+
 RenderWindow::RenderWindow(const char* title, int width, int height) : window(nullptr), renderer(nullptr), width(width), height(height) {
 	window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN);
 	if (window == nullptr) {
@@ -102,4 +120,11 @@ void RenderWindow::renderGeneration(Generation* generation) {
 	for (int i = 0; i < generation->getNoFoodSources(); i++) {
 		this->drawFoodSource(foodSources[i]);
 	}
+	this->checkCollision(generation);
+
+	// Creature* c = creaturePool[0];
+	// Food* f = foodSources[0];
+	// cout << distanceBetweenTwoPoints(c->getX(), c->getY(), f->getX(), f->getY()) << endl;
+	// cout << c->getChromosome()->getSize() + f->getCapacity() << endl;
+
 }

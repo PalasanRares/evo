@@ -20,6 +20,8 @@ private:
 	void drawCreature(Creature* creature);
 	void drawFoodSource(Food* foodSource);
 
+	void checkCollision(Generation* generation);
+
 public:
 	RenderWindow(const char* title, int width, int height);
 	~RenderWindow();

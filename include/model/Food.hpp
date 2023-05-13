@@ -12,4 +12,6 @@ public:
     float getX();
     float getY();
     float getCapacity();
+
+    void decreaseCapacity();
 };

@@ -2,8 +2,6 @@
 
 #include <cstdlib>
 
-#define SIZE_MODIFIER 3
-
 using namespace std;
 
 void Chromosome::generateColor() {

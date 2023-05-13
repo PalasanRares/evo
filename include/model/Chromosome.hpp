@@ -2,6 +2,8 @@
 
 #include "utils/Color.hpp"
 
+#define SIZE_MODIFIER 3
+
 class Chromosome {
 private:
     float speed;

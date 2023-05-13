@@ -8,6 +8,9 @@ private:
     float y;
     Chromosome* chromosome;
 
+    float foodNeeded;
+    float foodConsumed;
+
     float xTowards;
     float yTowards;
 
@@ -22,10 +25,13 @@ public:
     float getX();
     float getY();
     Chromosome* getChromosome();
+    float getFoodNeeded();
+    float getFoodConsumed();
 
     // Setters
     void setX(float x);
     void setY(float y);
-
+    
     void update(int width, int height);
+    void consumeFood();
 };

@@ -13,3 +13,7 @@ float Food::getY() {
 float Food::getCapacity() {
     return this->capacity;
 }
+
+void Food::decreaseCapacity() {
+    this->capacity -= 1;
+}

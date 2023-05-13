@@ -4,6 +4,10 @@
 #include <cmath>
 #include <iostream>
 
+#define SPEED_WEIGHT 0.5
+#define SIZE_WEIGHT 0.3
+#define STRENGTH_WEIGHT 0.2
+
 void Creature::generatePointTowards() {
     xTowards = (rand() % 2 == 0) ? x + rand() % 100 : x - rand() % 100;
     yTowards = (rand() % 2 == 0) ? y + rand() % 100 : y - rand() % 100;
@@ -23,9 +27,10 @@ void Creature::bindCreatureToArea(int width, int height) {
 }
 
 // Constructors
-Creature::Creature(float x, float y) : x(x), y(y) {
+Creature::Creature(float x, float y) : x(x), y(y), foodConsumed(0) {
     generatePointTowards();
     this->chromosome = Chromosome::generate();
+    foodNeeded = chromosome->getSpeed() * SPEED_WEIGHT + chromosome->getSize() * SIZE_WEIGHT / SIZE_MODIFIER + chromosome->getStrength() * STRENGTH_WEIGHT;
 }
 
 // Getters
@@ -39,6 +44,14 @@ float Creature::getY() {
 
 Chromosome* Creature::getChromosome() {
     return this->chromosome;
+}
+
+float Creature::getFoodNeeded() {
+    return this->foodNeeded;
+}
+
+float Creature::getFoodConsumed() {
+    return this->foodConsumed;
 }
 
 // Setters
@@ -64,4 +77,8 @@ void Creature::update(int width, int height) {
         generatePointTowards();
         bindCreatureToArea(width, height);
     }
+}
+
+void Creature::consumeFood() {
+    this->foodConsumed += 0.01;
 }
