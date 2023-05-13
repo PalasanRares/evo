@@ -33,7 +33,7 @@ void RenderWindow::drawCreature(Creature* creature) {
 	}
 }
 
-RenderWindow::RenderWindow(const char* title, int width, int height) : window(nullptr), renderer(nullptr) {
+RenderWindow::RenderWindow(const char* title, int width, int height) : window(nullptr), renderer(nullptr), width(width), height(height) {
 	window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN);
 	if (window == nullptr) {
 		cout << "Window failed to initialize. Error " << SDL_GetError() << endl;
@@ -63,7 +63,7 @@ void RenderWindow::display() {
 void RenderWindow::renderGeneration(Generation* generation) {
 	Creature** creaturePool = generation->getCreaturePool();
 	for (int i = 0; i < generation->getNoCreatures(); i++) {
-		creaturePool[i]->update();
+		creaturePool[i]->update(this->width, this->height);
 		this->drawCreature(creaturePool[i]);
 	}
 }

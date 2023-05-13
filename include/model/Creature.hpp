@@ -12,6 +12,7 @@ private:
     float yTowards;
 
     void generatePointTowards();
+    void bindCreatureToArea(int width, int height);
 
 public:
     // Constructors
@@ -26,5 +27,5 @@ public:
     void setX(float x);
     void setY(float y);
 
-    void update();
+    void update(int width, int height);
 };

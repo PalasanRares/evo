@@ -9,6 +9,19 @@ void Creature::generatePointTowards() {
     yTowards = (rand() % 2 == 0) ? y + rand() % 100 : y - rand() % 100;
 }
 
+void Creature::bindCreatureToArea(int width, int height) {
+    if (xTowards < 0) {
+        xTowards = 0;
+    } else if (xTowards > width) {
+        xTowards = width;
+    }
+    if (yTowards < 0) {
+        yTowards = 0;
+    } else if (yTowards > height) {
+        yTowards = height;
+    }
+}
+
 // Constructors
 Creature::Creature(float x, float y) : x(x), y(y) {
     generatePointTowards();
@@ -37,7 +50,7 @@ void Creature::setY(float y) {
     this->y = y;
 }
 
-void Creature::update() {
+void Creature::update(int width, int height) {
     float dx = xTowards - x;
     float dy = yTowards - y;
     float distance = sqrt(dx * dx + dy * dy);
@@ -49,5 +62,6 @@ void Creature::update() {
         y = y + dy / time;
     } else {
         generatePointTowards();
+        bindCreatureToArea(width, height);
     }
 }
