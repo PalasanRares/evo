@@ -18,6 +18,7 @@ private:
 	int height;
 
 	void drawCreature(Creature* creature);
+	void drawFoodSource(Food* foodSource);
 
 public:
 	RenderWindow(const char* title, int width, int height);

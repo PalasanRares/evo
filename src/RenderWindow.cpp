@@ -33,6 +33,36 @@ void RenderWindow::drawCreature(Creature* creature) {
 	}
 }
 
+void RenderWindow::drawFoodSource(Food* foodSource) {
+
+	float radius = foodSource->getCapacity();
+
+	float x = radius;
+	float y = 0;
+	float err = 0;
+
+	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 10);
+
+	while (x >= y) {
+		SDL_RenderDrawLineF(renderer, foodSource->getX(), foodSource->getY(), foodSource->getX() + x, foodSource->getY() + y);
+		SDL_RenderDrawLineF(renderer, foodSource->getX(), foodSource->getY(), foodSource->getX() + y, foodSource->getY() + x);
+		SDL_RenderDrawLineF(renderer, foodSource->getX(), foodSource->getY(), foodSource->getX() - y, foodSource->getY() + x);
+		SDL_RenderDrawLineF(renderer, foodSource->getX(), foodSource->getY(), foodSource->getX() - x, foodSource->getY() + y);
+		SDL_RenderDrawLineF(renderer, foodSource->getX(), foodSource->getY(), foodSource->getX() - x, foodSource->getY() - y);
+		SDL_RenderDrawLineF(renderer, foodSource->getX(), foodSource->getY(), foodSource->getX() - y, foodSource->getY() - x);
+		SDL_RenderDrawLineF(renderer, foodSource->getX(), foodSource->getY(), foodSource->getX() + y, foodSource->getY() - x);
+		SDL_RenderDrawLineF(renderer, foodSource->getX(), foodSource->getY(), foodSource->getX() + x, foodSource->getY() - y);
+
+		if (err <= 0) {
+			y += 1;
+			err += 2 * y + 1;
+		} else {
+			x -= 1;
+			err -= 2 * x + 1;
+		}
+	}
+}
+
 RenderWindow::RenderWindow(const char* title, int width, int height) : window(nullptr), renderer(nullptr), width(width), height(height) {
 	window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN);
 	if (window == nullptr) {
@@ -44,6 +74,7 @@ RenderWindow::RenderWindow(const char* title, int width, int height) : window(nu
 			cout << "Renderer failed to initialize. Error " << SDL_GetError() << endl;
 		}
 	}
+	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 }
 
 RenderWindow::~RenderWindow() {
@@ -65,5 +96,10 @@ void RenderWindow::renderGeneration(Generation* generation) {
 	for (int i = 0; i < generation->getNoCreatures(); i++) {
 		creaturePool[i]->update(this->width, this->height);
 		this->drawCreature(creaturePool[i]);
+	}
+
+	Food** foodSources = generation->getFoodSources();
+	for (int i = 0; i < generation->getNoFoodSources(); i++) {
+		this->drawFoodSource(foodSources[i]);
 	}
 }
