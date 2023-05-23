@@ -38,6 +38,10 @@ Creature::Creature(float x, float y, Chromosome* chromosome) : x(x), y(y), foodC
     foodNeeded = chromosome->getSpeed() * SPEED_WEIGHT + chromosome->getSize() * SIZE_WEIGHT / SIZE_MODIFIER + chromosome->getStrength() * STRENGTH_WEIGHT;
 }
 
+Creature::~Creature() {
+    delete chromosome;
+}
+
 // Getters
 float Creature::getX() {
     return this->x;

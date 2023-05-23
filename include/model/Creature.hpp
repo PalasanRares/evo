@@ -21,6 +21,7 @@ public:
     // Constructors
     Creature(float x, float y);
     Creature(float x, float y, Chromosome* chromosome);
+    ~Creature();
 
     // Getters
     float getX();

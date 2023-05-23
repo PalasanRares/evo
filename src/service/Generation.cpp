@@ -32,6 +32,11 @@ Generation::Generation(int width, int height, int noCreatures, int noFoodSources
     startTime = SDL_GetPerformanceCounter();
 }
 
+Generation::~Generation() {
+    delete[] creaturePool;
+    delete[] foodSources;
+}
+
 Creature** Generation::getCreaturePool() {
     return this->creaturePool;
 }
@@ -94,7 +99,7 @@ Generation* Generation::createNewGeneration(int width, int height) {
             newCreaturePool.push_back(new Creature(rand() % width, rand() % height, newChromosome));
         }
     }
-    Creature** newCreaturePoolArray;
+    Creature** newCreaturePoolArray = new Creature*[newCreaturePool.size()];
     copy(newCreaturePool.begin(), newCreaturePool.end(), newCreaturePoolArray);
     return new Generation(width, height, newCreaturePool.size(), noFoodSources, newCreaturePoolArray);
 }

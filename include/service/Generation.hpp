@@ -23,6 +23,8 @@ public:
     Generation(int width, int height, int noCreatures, int noFoodSources);
     Generation(int width, int height, int noCreatures, int noFoodSources, Creature** creaturePool);
 
+    ~Generation();
+
     Creature** getCreaturePool();
     Food** getFoodSources();
     int getNoCreatures();
