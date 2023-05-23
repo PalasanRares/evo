@@ -71,14 +71,28 @@ Generation* Generation::createNewGeneration(int width, int height) {
     size_t survivingNumber = survivingCreatures.size();
     if (survivingNumber % 2 == 1) {
         survivingCreatures.pop_back();
+        survivingNumber -= 1;
     }
 
-    // // crossover their genes
+    // crossover their genes
     for (int index = 0; index < survivingNumber - 1; index += 2) {
-        Chromosome* newChromosome = Chromosome::crossover(survivingCreatures.at(index)->getChromosome(), survivingCreatures.at(index + 1)->getChromosome());
-        // mutate offspring genes
-        newChromosome->mutate();
-        newCreaturePool.push_back(new Creature(rand() % width, rand() % height, newChromosome));
+        float multiplicityCombined = survivingCreatures.at(index)->getChromosome()->getMultiplicity() + survivingCreatures.at(index + 1)->getChromosome()->getMultiplicity();
+        int noOffsprings;
+        if (multiplicityCombined < 0.25) {
+            noOffsprings = 1;
+        } else if (multiplicityCombined < 0.5) {
+            noOffsprings = 2;
+        } else if (multiplicityCombined < 0.75) {
+            noOffsprings = 3;
+        } else {
+            noOffsprings = 4;
+        }
+        for (int i = 0; i < noOffsprings; i++) {
+            Chromosome* newChromosome = Chromosome::crossover(survivingCreatures.at(index)->getChromosome(), survivingCreatures.at(index + 1)->getChromosome());
+            // mutate offspring genes
+            newChromosome->mutate();
+            newCreaturePool.push_back(new Creature(rand() % width, rand() % height, newChromosome));
+        }
     }
     Creature** newCreaturePoolArray;
     copy(newCreaturePool.begin(), newCreaturePool.end(), newCreaturePoolArray);

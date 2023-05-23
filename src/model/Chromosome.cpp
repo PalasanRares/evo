@@ -10,7 +10,7 @@ void Chromosome::generateColor() {
     this->color.b = this->strength * 255;
 }
 
-Chromosome::Chromosome(float speed, float strength, float size) : speed(speed), strength(strength), size(size) {
+Chromosome::Chromosome(float speed, float strength, float size, float multiplicity) : speed(speed), strength(strength), size(size), multiplicity(multiplicity) {
     generateColor();
 }
 
@@ -18,12 +18,13 @@ Chromosome* Chromosome::generate() {
     float speed = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
     float strength = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
     float size = static_cast <float> (rand()) / static_cast <float> (RAND_MAX) * SIZE_MODIFIER;
-    return new Chromosome(speed, strength, size);
+    float multiplicity = static_cast <float> ((rand())) / static_cast <float> (RAND_MAX);
+    return new Chromosome(speed, strength, size, multiplicity);
 }
 
 Chromosome* Chromosome::crossover(Chromosome* first, Chromosome* second) {
     // speed and size come from first, strength and multiplicity (eventually) come from second
-    return new Chromosome(first->getSpeed(), second->getStrength(), first->getSize());
+    return new Chromosome(first->getSpeed(), second->getStrength(), first->getSize(), second->getMultiplicity());
 }
 
 float Chromosome::getSpeed() {
@@ -36,6 +37,10 @@ float Chromosome::getStrength() {
 
 float Chromosome::getSize() {
     return this->size;
+}
+
+float Chromosome::getMultiplicity() {
+    return multiplicity;
 }
 
 Color Chromosome::getColor() {
@@ -62,6 +67,13 @@ void Chromosome::mutate() {
             size += 0.1;
         } else {
             size -= 0.1;
+        }
+    }
+    if (static_cast <float> (rand()) / static_cast <float> (RAND_MAX) < MUTATION_CHANCE) {
+        if (rand() % 2 == 0) {
+            multiplicity += 0.1;
+        } else {
+            multiplicity -= 0.1;
         }
     }
 }

@@ -10,11 +10,12 @@ private:
     float speed;
     float strength;
     float size;
+    float multiplicity;
     Color color;
 
     void generateColor();
 
-    Chromosome(float speed, float strength, float size);
+    Chromosome(float speed, float strength, float size, float multiplicity);
 
 public:
     static Chromosome* generate();
@@ -23,6 +24,7 @@ public:
     float getSpeed();
     float getStrength();
     float getSize();
+    float getMultiplicity();
     Color getColor();
 
     void mutate();
