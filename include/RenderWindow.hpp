@@ -17,8 +17,10 @@ private:
 	int width;
 	int height;
 
+	void drawCircle(float x, float y, float radius);
 	void drawCreature(Creature* creature);
 	void drawFoodSource(Food* foodSource);
+	void drawPopulationSize(int populationSize);
 
 	void checkCollision(Generation* generation);
 

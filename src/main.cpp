@@ -11,7 +11,7 @@
 using namespace std;
 
 int main(int argc, char** argv) {
-	const char* title = "Evo 0.0.4";
+	const char* title = "Evo 0.0.5";
 	const int width = 1000;
 	const int height = 500;
 	RenderWindow* window = new RenderWindow(title, width, height);

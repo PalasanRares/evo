@@ -2,66 +2,56 @@
 
 #include <iostream>
 #include <cmath>
+#include <string>
 
-void RenderWindow::drawCreature(Creature* creature) {
-
-	float radius = creature->getChromosome()->getSize();
-
-	float x = radius;
-	float y = 0;
+void RenderWindow::drawCircle(float x, float y, float radius) {
+	float x0 = radius;
+	float y0 = 0;
 	float err = 0;
 
-	Color creatureColor = creature->getChromosome()->getColor();
-	SDL_SetRenderDrawColor(renderer, creatureColor.r, creatureColor.g, creatureColor.b, 255);
-
-	while (x >= y) {
-		SDL_RenderDrawLineF(renderer, creature->getX(), creature->getY(), creature->getX() + x, creature->getY() + y);
-		SDL_RenderDrawLineF(renderer, creature->getX(), creature->getY(), creature->getX() + y, creature->getY() + x);
-		SDL_RenderDrawLineF(renderer, creature->getX(), creature->getY(), creature->getX() - y, creature->getY() + x);
-		SDL_RenderDrawLineF(renderer, creature->getX(), creature->getY(), creature->getX() - x, creature->getY() + y);
-		SDL_RenderDrawLineF(renderer, creature->getX(), creature->getY(), creature->getX() - x, creature->getY() - y);
-		SDL_RenderDrawLineF(renderer, creature->getX(), creature->getY(), creature->getX() - y, creature->getY() - x);
-		SDL_RenderDrawLineF(renderer, creature->getX(), creature->getY(), creature->getX() + y, creature->getY() - x);
-		SDL_RenderDrawLineF(renderer, creature->getX(), creature->getY(), creature->getX() + x, creature->getY() - y);
+	while (x0 >= y0) {
+		SDL_RenderDrawLineF(renderer, x, y, x + x0, y + y0);
+		SDL_RenderDrawLineF(renderer, x, y, x + y0, y + x0);
+		SDL_RenderDrawLineF(renderer, x, y, x - y0, y + x0);
+		SDL_RenderDrawLineF(renderer, x, y, x - x0, y + y0);
+		SDL_RenderDrawLineF(renderer, x, y, x - x0, y - y0);
+		SDL_RenderDrawLineF(renderer, x, y, x - y0, y - x0);
+		SDL_RenderDrawLineF(renderer, x, y, x + y0, y - x0);
+		SDL_RenderDrawLineF(renderer, x, y, x + x0, y - y0);
 
 		if (err <= 0) {
-			y += 1;
-			err += 2 * y + 1;
+			y0 += 1;
+			err += 2 * y0 + 1;
 		} else {
-			x -= 1;
-			err -= 2 * x + 1;
+			x0 -= 1;
+			err -= 2 * x0 + 1;
 		}
 	}
 }
 
+void RenderWindow::drawCreature(Creature* creature) {
+	Color creatureColor = creature->getChromosome()->getColor();
+	SDL_SetRenderDrawColor(renderer, creatureColor.r, creatureColor.g, creatureColor.b, 255);
+
+	drawCircle(creature->getX(), creature->getY(), creature->getChromosome()->getSize());
+}
+
 void RenderWindow::drawFoodSource(Food* foodSource) {
-
-	float radius = foodSource->getCapacity();
-
-	float x = radius;
-	float y = 0;
-	float err = 0;
-
 	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 10);
 
-	while (x >= y) {
-		SDL_RenderDrawLineF(renderer, foodSource->getX(), foodSource->getY(), foodSource->getX() + x, foodSource->getY() + y);
-		SDL_RenderDrawLineF(renderer, foodSource->getX(), foodSource->getY(), foodSource->getX() + y, foodSource->getY() + x);
-		SDL_RenderDrawLineF(renderer, foodSource->getX(), foodSource->getY(), foodSource->getX() - y, foodSource->getY() + x);
-		SDL_RenderDrawLineF(renderer, foodSource->getX(), foodSource->getY(), foodSource->getX() - x, foodSource->getY() + y);
-		SDL_RenderDrawLineF(renderer, foodSource->getX(), foodSource->getY(), foodSource->getX() - x, foodSource->getY() - y);
-		SDL_RenderDrawLineF(renderer, foodSource->getX(), foodSource->getY(), foodSource->getX() - y, foodSource->getY() - x);
-		SDL_RenderDrawLineF(renderer, foodSource->getX(), foodSource->getY(), foodSource->getX() + y, foodSource->getY() - x);
-		SDL_RenderDrawLineF(renderer, foodSource->getX(), foodSource->getY(), foodSource->getX() + x, foodSource->getY() - y);
+	drawCircle(foodSource->getX(), foodSource->getY(), foodSource->getCapacity());
+}
 
-		if (err <= 0) {
-			y += 1;
-			err += 2 * y + 1;
-		} else {
-			x -= 1;
-			err -= 2 * x + 1;
-		}
-	}
+void RenderWindow::drawPopulationSize(int populationSize) {
+	SDL_Color white = { 255, 255, 255 };
+	string message = "Population: " + to_string(populationSize);
+	SDL_Surface* messageSurface = TTF_RenderUTF8_Solid(font, message.c_str(), white);
+	SDL_Texture* messageTexture = SDL_CreateTextureFromSurface(renderer, messageSurface);
+	SDL_Rect messageArea = { 15, 15, messageSurface->w, messageSurface->h };
+	SDL_RenderCopy(renderer, messageTexture, nullptr, &messageArea);
+
+	SDL_FreeSurface(messageSurface);
+	SDL_DestroyTexture(messageTexture);
 }
 
 float distanceBetweenTwoPoints(float x1, float y1, float x2, float y2) {
@@ -90,6 +80,13 @@ RenderWindow::RenderWindow(const char* title, int width, int height) : window(nu
 		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 		if (renderer == nullptr) {
 			cout << "Renderer failed to initialize. Error " << SDL_GetError() << endl;
+		} else if (TTF_Init() == -1) {
+			cout << "Failed to initialize TTF. Error " << TTF_GetError() << endl;
+		} else {
+			font = TTF_OpenFont("res/upheavtt.ttf", 16);
+			if (font == nullptr) {
+				cout << "Failed to load font. Error " << TTF_GetError() << endl;
+			}
 		}
 	}
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
@@ -98,6 +95,8 @@ RenderWindow::RenderWindow(const char* title, int width, int height) : window(nu
 RenderWindow::~RenderWindow() {
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
+	TTF_CloseFont(font);
+	TTF_Quit();
 }
 
 void RenderWindow::clear() {
@@ -122,9 +121,5 @@ void RenderWindow::renderGeneration(Generation* generation) {
 	}
 	this->checkCollision(generation);
 
-	// Creature* c = creaturePool[0];
-	// Food* f = foodSources[0];
-	// cout << distanceBetweenTwoPoints(c->getX(), c->getY(), f->getX(), f->getY()) << endl;
-	// cout << c->getChromosome()->getSize() + f->getCapacity() << endl;
-
+	this->drawPopulationSize(generation->getNoCreatures());
 }

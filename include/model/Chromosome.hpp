@@ -2,7 +2,7 @@
 
 #include "utils/Color.hpp"
 
-#define SIZE_MODIFIER 3
+#define SIZE_MODIFIER 5
 
 class Chromosome {
 private:
