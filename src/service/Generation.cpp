@@ -64,11 +64,14 @@ Generation* Generation::createNewGeneration(int width, int height) {
     sort(creatures.begin(), creatures.end(), sortByFoodConsumed);
 
     // filter surviving creatures
-    size_t survivingNumber = noCreatures * SURVIVING_CREATURES;
+    vector<Creature*> survivingCreatures;
+    copy_if(creatures.begin(), creatures.end(), back_inserter(survivingCreatures), [](Creature* c) {
+        return c->getFoodConsumed() > 0;
+    });
+    size_t survivingNumber = survivingCreatures.size();
     if (survivingNumber % 2 == 1) {
-        survivingNumber += 1;
+        survivingCreatures.pop_back();
     }
-    vector<Creature*> survivingCreatures(creatures.begin(), creatures.begin() + survivingNumber);
 
     // // crossover their genes
     for (int index = 0; index < survivingNumber - 1; index += 2) {

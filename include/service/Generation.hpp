@@ -7,8 +7,6 @@
 
 #include <cstdlib>
 
-#define SURVIVING_CREATURES 0.5
-
 class Generation {
 private:
     Creature** creaturePool;

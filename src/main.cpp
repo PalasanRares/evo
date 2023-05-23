@@ -8,7 +8,7 @@
 #include "model/Creature.hpp"
 #include "service/Generation.hpp"
 
-#define GENERATION_TIME 5
+#define GENERATION_TIME 30
 
 using namespace std;
 
