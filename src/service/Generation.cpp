@@ -81,7 +81,7 @@ Generation* Generation::createNewGeneration(int width, int height) {
 
     // crossover their genes
     for (int index = 0; index < survivingNumber - 1; index += 2) {
-        float multiplicityCombined = survivingCreatures.at(index)->getChromosome()->getMultiplicity() + survivingCreatures.at(index + 1)->getChromosome()->getMultiplicity();
+        float multiplicityCombined = survivingCreatures.at(index)->getChromosome()->getMultiplicity() / survivingCreatures.at(index + 1)->getChromosome()->getMultiplicity();
         int noOffsprings;
         if (multiplicityCombined < 0.25) {
             noOffsprings = 1;

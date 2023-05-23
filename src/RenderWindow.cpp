@@ -4,6 +4,31 @@
 #include <cmath>
 #include <string>
 
+void RenderWindow::drawCircleEmpty(float x, float y, float radius) {
+	float x0 = radius;
+	float y0 = 0;
+	float err = 0;
+
+	while (x0 >= y0) {
+		SDL_RenderDrawPointF(renderer, x + x0, y + y0);
+		SDL_RenderDrawPointF(renderer, x + y0, y + x0);
+		SDL_RenderDrawPointF(renderer, x - y0, y + x0);
+		SDL_RenderDrawPointF(renderer, x - x0, y + y0);
+		SDL_RenderDrawPointF(renderer, x - x0, y - y0);
+		SDL_RenderDrawPointF(renderer, x - y0, y - x0);
+		SDL_RenderDrawPointF(renderer, x + y0, y - x0);
+		SDL_RenderDrawPointF(renderer, x + x0, y - y0);
+
+		if (err <= 0) {
+			y0 += 1;
+			err += 2 * y0 + 1;
+		} else {
+			x0 -= 1;
+			err -= 2 * x0 + 1;
+		}
+	}
+}
+
 void RenderWindow::drawCircle(float x, float y, float radius) {
 	float x0 = radius;
 	float y0 = 0;
@@ -34,6 +59,11 @@ void RenderWindow::drawCreature(Creature* creature) {
 	SDL_SetRenderDrawColor(renderer, creatureColor.r, creatureColor.g, creatureColor.b, 255);
 
 	drawCircle(creature->getX(), creature->getY(), creature->getChromosome()->getSize());
+
+	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+	if (creature->getChromosome()->getPredator()) {
+		drawCircleEmpty(creature->getX(), creature->getY(), creature->getChromosome()->getSize() + 2);
+	}
 }
 
 void RenderWindow::drawFoodSource(Food* foodSource) {

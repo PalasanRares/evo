@@ -11,11 +11,12 @@ private:
     float strength;
     float size;
     float multiplicity;
+    bool predator;
     Color color;
 
     void generateColor();
 
-    Chromosome(float speed, float strength, float size, float multiplicity);
+    Chromosome(float speed, float strength, float size, float multiplicity, bool predator);
 
 public:
     static Chromosome* generate();
@@ -25,6 +26,7 @@ public:
     float getStrength();
     float getSize();
     float getMultiplicity();
+    bool getPredator();
     Color getColor();
 
     void mutate();

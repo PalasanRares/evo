@@ -18,6 +18,7 @@ private:
 	int height;
 
 	void drawCircle(float x, float y, float radius);
+	void drawCircleEmpty(float x, float y, float radius);
 	void drawCreature(Creature* creature);
 	void drawFoodSource(Food* foodSource);
 	void drawPopulationSize(int populationSize);

@@ -10,7 +10,7 @@ void Chromosome::generateColor() {
     this->color.b = this->strength * 255;
 }
 
-Chromosome::Chromosome(float speed, float strength, float size, float multiplicity) : speed(speed), strength(strength), size(size), multiplicity(multiplicity) {
+Chromosome::Chromosome(float speed, float strength, float size, float multiplicity, bool predator) : speed(speed), strength(strength), size(size), multiplicity(multiplicity), predator(predator) {
     generateColor();
 }
 
@@ -19,12 +19,14 @@ Chromosome* Chromosome::generate() {
     float strength = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
     float size = static_cast <float> (rand()) / static_cast <float> (RAND_MAX) * SIZE_MODIFIER;
     float multiplicity = static_cast <float> ((rand())) / static_cast <float> (RAND_MAX);
-    return new Chromosome(speed, strength, size, multiplicity);
+    bool predator = rand() % 2 == 1 ? true : false;
+    return new Chromosome(speed, strength, size, multiplicity, predator);
 }
 
 Chromosome* Chromosome::crossover(Chromosome* first, Chromosome* second) {
+    bool predator = first->getPredator() && second->getPredator();
     // speed and size come from first, strength and multiplicity (eventually) come from second
-    return new Chromosome(first->getSpeed(), second->getStrength(), first->getSize(), second->getMultiplicity());
+    return new Chromosome(first->getSpeed(), second->getStrength(), first->getSize(), second->getMultiplicity(), predator);
 }
 
 float Chromosome::getSpeed() {
@@ -41,6 +43,10 @@ float Chromosome::getSize() {
 
 float Chromosome::getMultiplicity() {
     return multiplicity;
+}
+
+bool Chromosome::getPredator() {
+    return predator;
 }
 
 Color Chromosome::getColor() {
@@ -75,5 +81,8 @@ void Chromosome::mutate() {
         } else {
             multiplicity -= 0.1;
         }
+    }
+    if (static_cast <float> (rand()) / static_cast <float> (RAND_MAX) < MUTATION_CHANCE) {
+        predator = !predator;
     }
 }
