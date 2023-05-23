@@ -122,4 +122,6 @@ void RenderWindow::renderGeneration(Generation* generation) {
 	this->checkCollision(generation);
 
 	this->drawPopulationSize(generation->getNoCreatures());
+
+	generation->updateElapsedTime();
 }

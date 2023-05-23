@@ -21,6 +21,11 @@ Chromosome* Chromosome::generate() {
     return new Chromosome(speed, strength, size);
 }
 
+Chromosome* Chromosome::crossover(Chromosome* first, Chromosome* second) {
+    // speed and size come from first, strength and multiplicity (eventually) come from second
+    return new Chromosome(first->getSpeed(), second->getStrength(), first->getSize());
+}
+
 float Chromosome::getSpeed() {
     return this->speed;
 }
@@ -35,4 +40,28 @@ float Chromosome::getSize() {
 
 Color Chromosome::getColor() {
     return this->color;
+}
+
+void Chromosome::mutate() {
+    if (static_cast <float> (rand()) / static_cast <float> (RAND_MAX) < MUTATION_CHANCE) {
+        if (rand() % 2 == 0) {
+            speed += 0.1;
+        } else {
+            speed -= 0.1;
+        }
+    }
+    if (static_cast <float> (rand()) / static_cast <float> (RAND_MAX) < MUTATION_CHANCE) {
+        if (rand() % 2 == 0) {
+            strength += 0.1;
+        } else {
+            strength -= 0.1;
+        }
+    }
+    if (static_cast <float> (rand()) / static_cast <float> (RAND_MAX) < MUTATION_CHANCE) {
+        if (rand() % 2 == 0) {
+            size += 0.1;
+        } else {
+            size -= 0.1;
+        }
+    }
 }

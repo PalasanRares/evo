@@ -33,6 +33,11 @@ Creature::Creature(float x, float y) : x(x), y(y), foodConsumed(0) {
     foodNeeded = chromosome->getSpeed() * SPEED_WEIGHT + chromosome->getSize() * SIZE_WEIGHT / SIZE_MODIFIER + chromosome->getStrength() * STRENGTH_WEIGHT;
 }
 
+Creature::Creature(float x, float y, Chromosome* chromosome) : x(x), y(y), foodConsumed(0), chromosome(chromosome) {
+    generatePointTowards();
+    foodNeeded = chromosome->getSpeed() * SPEED_WEIGHT + chromosome->getSize() * SIZE_WEIGHT / SIZE_MODIFIER + chromosome->getStrength() * STRENGTH_WEIGHT;
+}
+
 // Getters
 float Creature::getX() {
     return this->x;

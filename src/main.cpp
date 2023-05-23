@@ -8,6 +8,8 @@
 #include "model/Creature.hpp"
 #include "service/Generation.hpp"
 
+#define GENERATION_TIME 5
+
 using namespace std;
 
 int main(int argc, char** argv) {
@@ -37,6 +39,12 @@ int main(int argc, char** argv) {
 		window->renderGeneration(generation);
 
 		window->display();
+
+		if (generation->getElapsedTime() > GENERATION_TIME) {
+			Generation* oldGeneration = generation;
+			generation = generation->createNewGeneration(width, height);
+			delete oldGeneration;
+		}
 
 		Uint64 end = SDL_GetPerformanceCounter();
 		float elapsedTime = (end - start) / (float)SDL_GetPerformanceFrequency() * 1000.0f;
