@@ -2,7 +2,7 @@
 
 #include "utils/Color.hpp"
 
-#define SIZE_MODIFIER 5
+#define SIZE_MODIFIER 25
 #define MUTATION_CHANCE 0.1
 
 class Chromosome {

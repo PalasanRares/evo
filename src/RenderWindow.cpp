@@ -3,31 +3,6 @@
 #include <iostream>
 #include <cmath>
 
-void RenderWindow::drawCircleEmpty(float x, float y, float radius) {
-	float x0 = radius;
-	float y0 = 0;
-	float err = 0;
-
-	while (x0 >= y0) {
-		SDL_RenderDrawPointF(renderer, x + x0, y + y0);
-		SDL_RenderDrawPointF(renderer, x + y0, y + x0);
-		SDL_RenderDrawPointF(renderer, x - y0, y + x0);
-		SDL_RenderDrawPointF(renderer, x - x0, y + y0);
-		SDL_RenderDrawPointF(renderer, x - x0, y - y0);
-		SDL_RenderDrawPointF(renderer, x - y0, y - x0);
-		SDL_RenderDrawPointF(renderer, x + y0, y - x0);
-		SDL_RenderDrawPointF(renderer, x + x0, y - y0);
-
-		if (err <= 0) {
-			y0 += 1;
-			err += 2 * y0 + 1;
-		} else {
-			x0 -= 1;
-			err -= 2 * x0 + 1;
-		}
-	}
-}
-
 void RenderWindow::drawCircle(float x, float y, float radius) {
 	float x0 = radius;
 	float y0 = 0;
@@ -55,13 +30,14 @@ void RenderWindow::drawCircle(float x, float y, float radius) {
 
 void RenderWindow::drawCreature(Creature* creature) {
 	Color creatureColor = creature->getChromosome()->getColor();
-	SDL_SetRenderDrawColor(renderer, creatureColor.r, creatureColor.g, creatureColor.b, 255);
+	SDL_Rect creatureArea = { creature->getX() - creature->getChromosome()->getSize(), creature->getY() - creature->getChromosome()->getSize(), creature->getChromosome()->getSize() * 2, creature->getChromosome()->getSize() * 2 };
 
-	drawCircle(creature->getX(), creature->getY(), creature->getChromosome()->getSize());
-
-	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 	if (creature->getChromosome()->getPredator()) {
-		drawCircleEmpty(creature->getX(), creature->getY(), creature->getChromosome()->getSize() + 2);
+		SDL_SetTextureColorMod(hunterTexture, creatureColor.r, creatureColor.g, creatureColor.b);
+		SDL_RenderCopy(renderer, hunterTexture, nullptr, &creatureArea);
+	} else {
+		SDL_SetTextureColorMod(preyTexture, creatureColor.r, creatureColor.g, creatureColor.b);
+		SDL_RenderCopy(renderer, preyTexture, nullptr, &creatureArea);
 	}
 }
 
@@ -135,6 +111,12 @@ RenderWindow::RenderWindow(const char* title, int width, int height) : window(nu
 			if (font == nullptr) {
 				cout << "Failed to load font. Error " << TTF_GetError() << endl;
 			}
+		}
+		if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
+			cout << "Failed to initialize IMG. Error " << SDL_GetError() << endl;
+		} else {
+			preyTexture = IMG_LoadTexture(renderer, "res/prey.png");
+			hunterTexture = IMG_LoadTexture(renderer, "res/hunter.png");
 		}
 	}
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);

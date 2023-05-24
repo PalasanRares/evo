@@ -16,11 +16,13 @@ private:
 	SDL_Renderer* renderer;
 	TTF_Font* font;
 
+	SDL_Texture* preyTexture;
+	SDL_Texture* hunterTexture;
+
 	int width;
 	int height;
 
 	void drawCircle(float x, float y, float radius);
-	void drawCircleEmpty(float x, float y, float radius);
 	void drawCreature(Creature* creature);
 	void drawFoodSource(Food* foodSource);
 
