@@ -9,6 +9,7 @@
 
 class Generation {
 private:
+    int generationNumber;
     Creature** creaturePool;
     Food** foodSources;
     int noCreatures;
@@ -21,10 +22,11 @@ private:
 
 public:
     Generation(int width, int height, int noCreatures, int noFoodSources);
-    Generation(int width, int height, int noCreatures, int noFoodSources, Creature** creaturePool);
+    Generation(int width, int height, int noCreatures, int noFoodSources, Creature** creaturePool, int generationNumber);
 
     ~Generation();
 
+    int getGenerationNumber();
     Creature** getCreaturePool();
     Food** getFoodSources();
     int getNoCreatures();

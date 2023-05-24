@@ -96,6 +96,18 @@ void RenderWindow::drawElapsedTime(int elapsedTime) {
 	SDL_DestroyTexture(messageTexture);
 }
 
+void RenderWindow::drawGenerationNumber(int generationNumber) {
+	SDL_Color white = { 255, 255, 255 };
+	string message = "Generation: " + to_string(generationNumber);
+	SDL_Surface* messageSurface = TTF_RenderUTF8_Solid(font, message.c_str(), white);
+	SDL_Texture* messageTexture = SDL_CreateTextureFromSurface(renderer, messageSurface);
+	SDL_Rect messageArea = { 15, 45, messageSurface->w, messageSurface->h };
+	SDL_RenderCopy(renderer, messageTexture, nullptr, &messageArea);
+
+	SDL_FreeSurface(messageSurface);
+	SDL_DestroyTexture(messageTexture);
+}
+
 float distanceBetweenTwoPoints(float x1, float y1, float x2, float y2) {
 	return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 }
@@ -186,6 +198,7 @@ void RenderWindow::renderGeneration(Generation* generation) {
 
 	this->drawPopulationSize(generation->getNoCreatures());
 	this->drawElapsedTime((int) generation->getElapsedTime());
+	this->drawGenerationNumber(generation->getGenerationNumber());
 
 	generation->updateElapsedTime();
 }

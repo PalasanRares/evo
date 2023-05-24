@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
 
 	SDL_Event event;
 
-	Generation* generation = new Generation(width, height, 1, 10);
+	Generation* generation = new Generation(width, height, 20, 10);
 
 	while (running) {
 		Uint64 start = SDL_GetPerformanceCounter();

@@ -23,6 +23,7 @@ private:
 	void drawFoodSource(Food* foodSource);
 	void drawPopulationSize(int populationSize);
 	void drawElapsedTime(int elapsedTime);
+	void drawGenerationNumber(int generationNumber);
 
 	void checkCollision(Generation* generation);
 	void checkCreaturesCollision(Generation* generation);

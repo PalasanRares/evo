@@ -11,7 +11,7 @@ bool Generation::sortByFoodConsumed(Creature* creature1, Creature* creature2) {
     return creature1->getFoodConsumed() > creature2->getFoodConsumed();
 }
 
-Generation::Generation(int width, int height, int noCreatures, int noFoodSources) : noCreatures(noCreatures), noFoodSources(noFoodSources) {
+Generation::Generation(int width, int height, int noCreatures, int noFoodSources) : noCreatures(noCreatures), noFoodSources(noFoodSources), generationNumber(0) {
     this->creaturePool = new Creature*[noCreatures];
     for (int i = 0; i < noCreatures; i++) {
         this->creaturePool[i] = new Creature(rand() % width, rand() % height);
@@ -24,7 +24,7 @@ Generation::Generation(int width, int height, int noCreatures, int noFoodSources
     startTime = SDL_GetPerformanceCounter();
 }
 
-Generation::Generation(int width, int height, int noCreatures, int noFoodSources, Creature** creaturePool) : noCreatures(noCreatures), noFoodSources(noFoodSources), creaturePool(creaturePool) {
+Generation::Generation(int width, int height, int noCreatures, int noFoodSources, Creature** creaturePool, int generationNumber) : noCreatures(noCreatures), noFoodSources(noFoodSources), creaturePool(creaturePool), generationNumber(generationNumber) {
     foodSources = new Food*[noFoodSources];
     for (int i = 0; i < noFoodSources; i++) {
         foodSources[i] = new Food(rand() % width, rand() % height, 100);
@@ -35,6 +35,10 @@ Generation::Generation(int width, int height, int noCreatures, int noFoodSources
 Generation::~Generation() {
     delete[] creaturePool;
     delete[] foodSources;
+}
+
+int Generation::getGenerationNumber() {
+    return generationNumber;
 }
 
 Creature** Generation::getCreaturePool() {
@@ -105,5 +109,5 @@ Generation* Generation::createNewGeneration(int width, int height) {
     }
     Creature** newCreaturePoolArray = new Creature*[newCreaturePool.size()];
     copy(newCreaturePool.begin(), newCreaturePool.end(), newCreaturePoolArray);
-    return new Generation(width, height, newCreaturePool.size(), noFoodSources, newCreaturePoolArray);
+    return new Generation(width, height, newCreaturePool.size(), noFoodSources, newCreaturePoolArray, generationNumber + 1);
 }
