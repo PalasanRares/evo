@@ -6,6 +6,8 @@
 #include "model/Creature.hpp"
 #include "service/Generation.hpp"
 
+#include <string>
+
 using namespace std;
 
 class RenderWindow {
@@ -21,9 +23,8 @@ private:
 	void drawCircleEmpty(float x, float y, float radius);
 	void drawCreature(Creature* creature);
 	void drawFoodSource(Food* foodSource);
-	void drawPopulationSize(int populationSize);
-	void drawElapsedTime(int elapsedTime);
-	void drawGenerationNumber(int generationNumber);
+
+	void drawText(const string& message, const int& x, const int& y);
 
 	void checkCollision(Generation* generation);
 	void checkCreaturesCollision(Generation* generation);

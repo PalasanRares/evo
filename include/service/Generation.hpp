@@ -16,7 +16,7 @@ private:
     int noFoodSources;
 
     Uint64 startTime;
-    float elapsedTime;
+    int elapsedTime;
 
     static bool sortByFoodConsumed(Creature* creature1, Creature* creature2);
 
@@ -31,7 +31,7 @@ public:
     Food** getFoodSources();
     int getNoCreatures();
     int getNoFoodSources();
-    float getElapsedTime();
+    int getElapsedTime();
 
     void updateElapsedTime();
     void killCreature(int index);

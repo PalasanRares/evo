@@ -57,7 +57,7 @@ int Generation::getNoFoodSources() {
     return this->noFoodSources;
 }
 
-float Generation::getElapsedTime() {
+int Generation::getElapsedTime() {
     return this->elapsedTime / 1000;
 }
 
