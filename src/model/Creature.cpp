@@ -27,13 +27,13 @@ void Creature::bindCreatureToArea(int width, int height) {
 }
 
 // Constructors
-Creature::Creature(float x, float y) : x(x), y(y), foodConsumed(0) {
+Creature::Creature(float x, float y) : x(x), y(y), foodConsumed(0), alive(true) {
     generatePointTowards();
     this->chromosome = Chromosome::generate();
     foodNeeded = chromosome->getSpeed() * SPEED_WEIGHT + chromosome->getSize() * SIZE_WEIGHT / SIZE_MODIFIER + chromosome->getStrength() * STRENGTH_WEIGHT;
 }
 
-Creature::Creature(float x, float y, Chromosome* chromosome) : x(x), y(y), foodConsumed(0), chromosome(chromosome) {
+Creature::Creature(float x, float y, Chromosome* chromosome) : x(x), y(y), foodConsumed(0), chromosome(chromosome), alive(true) {
     generatePointTowards();
     foodNeeded = chromosome->getSpeed() * SPEED_WEIGHT + chromosome->getSize() * SIZE_WEIGHT / SIZE_MODIFIER + chromosome->getStrength() * STRENGTH_WEIGHT;
 }
@@ -61,6 +61,16 @@ float Creature::getFoodNeeded() {
 
 float Creature::getFoodConsumed() {
     return this->foodConsumed;
+}
+
+bool Creature::isAlive() {
+    return alive;
+}
+
+void Creature::kill() {
+    x = -100;
+    y = -100;
+    alive = false;
 }
 
 // Setters

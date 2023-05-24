@@ -25,6 +25,7 @@ private:
 	void drawElapsedTime(int elapsedTime);
 
 	void checkCollision(Generation* generation);
+	void checkCreaturesCollision(Generation* generation);
 
 public:
 	RenderWindow(const char* title, int width, int height);

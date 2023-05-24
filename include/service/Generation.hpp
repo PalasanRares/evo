@@ -32,6 +32,7 @@ public:
     float getElapsedTime();
 
     void updateElapsedTime();
+    void killCreature(int index);
 
     Generation* createNewGeneration(int width, int height);
 };

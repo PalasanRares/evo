@@ -8,6 +8,8 @@ private:
     float y;
     Chromosome* chromosome;
 
+    bool alive;
+
     float foodNeeded;
     float foodConsumed;
 
@@ -29,6 +31,9 @@ public:
     Chromosome* getChromosome();
     float getFoodNeeded();
     float getFoodConsumed();
+
+    bool isAlive();
+    void kill();
 
     // Setters
     void setX(float x);

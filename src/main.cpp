@@ -13,7 +13,7 @@
 using namespace std;
 
 int main(int argc, char** argv) {
-	const char* title = "Evo 0.0.7";
+	const char* title = "Evo 0.0.8";
 	const int width = 1000;
 	const int height = 500;
 	RenderWindow* window = new RenderWindow(title, width, height);
@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
 
 	SDL_Event event;
 
-	Generation* generation = new Generation(width, height, 20, 10);
+	Generation* generation = new Generation(width, height, 1, 10);
 
 	while (running) {
 		Uint64 start = SDL_GetPerformanceCounter();

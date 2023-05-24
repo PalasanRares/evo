@@ -62,6 +62,10 @@ void Generation::updateElapsedTime() {
 	elapsedTime = (endTime - startTime) / (float)SDL_GetPerformanceFrequency() * 1000.0f;
 }
 
+void Generation::killCreature(int index) {
+    creaturePool[index]->kill();
+}
+
 Generation* Generation::createNewGeneration(int width, int height) {
     vector<Creature*> newCreaturePool;
     // sort creatures by food consumed

@@ -113,6 +113,24 @@ void RenderWindow::checkCollision(Generation* generation) {
 	}
 }
 
+void RenderWindow::checkCreaturesCollision(Generation* generation) {
+	for (int i = 0; i < generation->getNoCreatures() - 1; i++) {
+		Creature* creature1 = generation->getCreaturePool()[i];
+		for (int j = i + 1; j < generation->getNoCreatures(); j++) {
+			Creature* creature2 = generation->getCreaturePool()[j];
+			if (distanceBetweenTwoPoints(creature1->getX(), creature1->getY(), creature2->getX(), creature2->getY()) <= creature1->getChromosome()->getSize() + creature2->getChromosome()->getSize()) {
+				if (creature1->getChromosome()->getPredator() && creature1->getChromosome()->getStrength() > creature2->getChromosome()->getStrength()) {
+					creature1->consumeFood();
+					generation->killCreature(j);
+				} else if (creature2->getChromosome()->getPredator() && creature2->getChromosome()->getStrength() > creature1->getChromosome()->getStrength()) {
+					creature2->consumeFood();
+					generation->killCreature(i);
+				}
+			}
+		}
+	}
+}
+
 RenderWindow::RenderWindow(const char* title, int width, int height) : window(nullptr), renderer(nullptr), width(width), height(height) {
 	window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN);
 	if (window == nullptr) {
@@ -153,8 +171,10 @@ void RenderWindow::display() {
 void RenderWindow::renderGeneration(Generation* generation) {
 	Creature** creaturePool = generation->getCreaturePool();
 	for (int i = 0; i < generation->getNoCreatures(); i++) {
-		creaturePool[i]->update(this->width, this->height);
-		this->drawCreature(creaturePool[i]);
+		if (creaturePool[i]->isAlive()) {
+			creaturePool[i]->update(this->width, this->height);
+			this->drawCreature(creaturePool[i]);
+		}
 	}
 
 	Food** foodSources = generation->getFoodSources();
@@ -162,6 +182,7 @@ void RenderWindow::renderGeneration(Generation* generation) {
 		this->drawFoodSource(foodSources[i]);
 	}
 	this->checkCollision(generation);
+	this->checkCreaturesCollision(generation);
 
 	this->drawPopulationSize(generation->getNoCreatures());
 	this->drawElapsedTime((int) generation->getElapsedTime());
