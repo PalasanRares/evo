@@ -1,33 +1,27 @@
-#pragma once
+#ifndef _CHROMOSOME_HPP_
+#define _CHROMOSOME_HPP_
 
 #include "utils/Color.hpp"
 
 #define SIZE_MODIFIER 25
 #define MUTATION_CHANCE 0.1
 
-class Chromosome {
-private:
+struct Chromosome {
     float speed;
     float strength;
     float size;
     float multiplicity;
-    bool predator;
+
+    bool isPredator;
+
     Color color;
 
-    void generateColor();
-
-    Chromosome(float speed, float strength, float size, float multiplicity, bool predator);
-
-public:
     static Chromosome* generate();
-    static Chromosome* crossover(Chromosome* first, Chromosome* second);
 
-    float getSpeed();
-    float getStrength();
-    float getSize();
-    float getMultiplicity();
-    bool getPredator();
-    Color getColor();
+    Chromosome* crossover(Chromosome* other);
 
     void mutate();
+    void generateColor();
 };
+
+#endif

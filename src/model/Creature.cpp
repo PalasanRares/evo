@@ -30,12 +30,12 @@ void Creature::bindCreatureToArea(int width, int height) {
 Creature::Creature(float x, float y) : x(x), y(y), foodConsumed(0), alive(true) {
     generatePointTowards();
     this->chromosome = Chromosome::generate();
-    foodNeeded = chromosome->getSpeed() * SPEED_WEIGHT + chromosome->getSize() * SIZE_WEIGHT / SIZE_MODIFIER + chromosome->getStrength() * STRENGTH_WEIGHT;
+    foodNeeded = chromosome->speed * SPEED_WEIGHT + chromosome->size * SIZE_WEIGHT / SIZE_MODIFIER + chromosome->strength * STRENGTH_WEIGHT;
 }
 
 Creature::Creature(float x, float y, Chromosome* chromosome) : x(x), y(y), foodConsumed(0), chromosome(chromosome), alive(true) {
     generatePointTowards();
-    foodNeeded = chromosome->getSpeed() * SPEED_WEIGHT + chromosome->getSize() * SIZE_WEIGHT / SIZE_MODIFIER + chromosome->getStrength() * STRENGTH_WEIGHT;
+    foodNeeded = chromosome->speed * SPEED_WEIGHT + chromosome->size * SIZE_WEIGHT / SIZE_MODIFIER + chromosome->strength * STRENGTH_WEIGHT;
 }
 
 Creature::~Creature() {
@@ -87,7 +87,7 @@ void Creature::update(int width, int height) {
     float dy = yTowards - y;
     float distance = sqrt(dx * dx + dy * dy);
 
-    float time = distance / chromosome->getSpeed();
+    float time = distance / chromosome->speed;
 
     if (abs(x - xTowards) >= 1.0f) {
         x = x + dx / time;

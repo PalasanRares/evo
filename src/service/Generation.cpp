@@ -89,7 +89,7 @@ Generation* Generation::createNewGeneration(int width, int height) {
 
     // crossover their genes
     for (int index = 0; index < survivingNumber - 1; index += 2) {
-        float multiplicityCombined = survivingCreatures.at(index)->getChromosome()->getMultiplicity() / survivingCreatures.at(index + 1)->getChromosome()->getMultiplicity();
+        float multiplicityCombined = survivingCreatures.at(index)->getChromosome()->multiplicity / survivingCreatures.at(index + 1)->getChromosome()->multiplicity;
         int noOffsprings;
         if (multiplicityCombined < 0.25) {
             noOffsprings = 1;
@@ -101,11 +101,13 @@ Generation* Generation::createNewGeneration(int width, int height) {
             noOffsprings = 4;
         }
         for (int i = 0; i < noOffsprings; i++) {
-            Chromosome* newChromosome = Chromosome::crossover(survivingCreatures.at(index)->getChromosome(), survivingCreatures.at(index + 1)->getChromosome());
+            Chromosome* newChromosome = survivingCreatures.at(index)->getChromosome()->crossover(survivingCreatures.at(index + 1)->getChromosome());
             // mutate offspring genes
             newChromosome->mutate();
             newCreaturePool.push_back(new Creature(rand() % width, rand() % height, newChromosome));
         }
+        delete survivingCreatures.at(index);
+        delete survivingCreatures.at(index + 1);
     }
     Creature** newCreaturePoolArray = new Creature*[newCreaturePool.size()];
     copy(newCreaturePool.begin(), newCreaturePool.end(), newCreaturePoolArray);

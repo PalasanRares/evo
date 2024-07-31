@@ -5,3 +5,4 @@ target_sources(Evo
 
 add_subdirectory(model)
 add_subdirectory(service)
+add_subdirectory(utils)

@@ -2,55 +2,37 @@
 
 #include <cstdlib>
 
-using namespace std;
-
-void Chromosome::generateColor() {
-    color.r = speed * 255;
-    color.g = size * 255 / SIZE_MODIFIER;
-    color.b = strength * 255;
-}
-
-Chromosome::Chromosome(float speed, float strength, float size, float multiplicity, bool predator) : speed(speed), strength(strength), size(size), multiplicity(multiplicity), predator(predator) {
-    generateColor();
-}
-
 Chromosome* Chromosome::generate() {
     float speed = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
     float strength = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
     float size = static_cast <float> (rand()) / static_cast <float> (RAND_MAX) * SIZE_MODIFIER;
     float multiplicity = static_cast <float> ((rand())) / static_cast <float> (RAND_MAX);
-    bool predator = rand() % 2 == 1 ? true : false;
-    return new Chromosome(speed, strength, size, multiplicity, predator);
+    bool isPredator = rand() % 2 == 1 ? true : false;
+
+    Chromosome* result = new Chromosome();
+    result->speed = speed;
+    result->strength = strength;
+    result->size = size;
+    result->multiplicity = multiplicity;
+    result->isPredator = isPredator;
+    result->generateColor();
+
+    return result;
 }
 
-Chromosome* Chromosome::crossover(Chromosome* first, Chromosome* second) {
-    bool predator = first->getPredator() && second->getPredator();
-    // speed and size come from first, strength and multiplicity (eventually) come from second
-    return new Chromosome(first->getSpeed(), second->getStrength(), first->getSize(), second->getMultiplicity(), predator);
-}
+// TODO Change this not to be secvential
+Chromosome* Chromosome::crossover(Chromosome* other) {
+    bool predator = isPredator && other->isPredator;
+    
+    Chromosome* result = new Chromosome();
+    result->speed = speed;
+    result->strength = other->strength;
+    result->size = size;
+    result->multiplicity = other->multiplicity;
+    result->isPredator = predator;
+    result->generateColor();
 
-float Chromosome::getSpeed() {
-    return this->speed;
-}
-
-float Chromosome::getStrength() {
-    return this->strength;
-}
-
-float Chromosome::getSize() {
-    return this->size;
-}
-
-float Chromosome::getMultiplicity() {
-    return multiplicity;
-}
-
-bool Chromosome::getPredator() {
-    return predator;
-}
-
-Color Chromosome::getColor() {
-    return this->color;
+    return result;
 }
 
 void Chromosome::mutate() {
@@ -83,6 +65,12 @@ void Chromosome::mutate() {
         }
     }
     if (static_cast <float> (rand()) / static_cast <float> (RAND_MAX) < MUTATION_CHANCE) {
-        predator = !predator;
+        isPredator = !isPredator;
     }
+}
+
+void Chromosome::generateColor() {
+    color.r = speed * 255;
+    color.g = size * 255 / SIZE_MODIFIER;
+    color.b = size * 255;
 }

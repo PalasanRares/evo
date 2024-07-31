@@ -10,12 +10,14 @@
 
 #define GENERATION_TIME 30
 
-using namespace std;
+#define MAJOR 0
+#define MINOR 1
+#define PATCH 0
 
 int main(int argc, char** argv) {
-	const char* title = "Evo 0.0.8";
-	const int width = 1000;
-	const int height = 500;
+	const char* title = "Evo 0.1.0";
+	const int width = 1280;
+	const int height = 720;
 	RenderWindow* window = new RenderWindow(title, width, height);
 	bool running = true;
 
@@ -51,6 +53,7 @@ int main(int argc, char** argv) {
 		SDL_Delay(floor(33.333f - elapsedTime));
 	}
 
+	delete generation;
 	delete window;
 	return 0;
 }

@@ -3,36 +3,13 @@
 #include <iostream>
 #include <cmath>
 
-void RenderWindow::drawCircle(float x, float y, float radius) {
-	float x0 = radius;
-	float y0 = 0;
-	float err = 0;
-
-	while (x0 >= y0) {
-		SDL_RenderLine(renderer, x, y, x + x0, y + y0);
-		SDL_RenderLine(renderer, x, y, x + y0, y + x0);
-		SDL_RenderLine(renderer, x, y, x - y0, y + x0);
-		SDL_RenderLine(renderer, x, y, x - x0, y + y0);
-		SDL_RenderLine(renderer, x, y, x - x0, y - y0);
-		SDL_RenderLine(renderer, x, y, x - y0, y - x0);
-		SDL_RenderLine(renderer, x, y, x + y0, y - x0);
-		SDL_RenderLine(renderer, x, y, x + x0, y - y0);
-
-		if (err <= 0) {
-			y0 += 1;
-			err += 2 * y0 + 1;
-		} else {
-			x0 -= 1;
-			err -= 2 * x0 + 1;
-		}
-	}
-}
+#include "DrawingUtils.hpp"
 
 void RenderWindow::drawCreature(Creature* creature) {
-	Color creatureColor = creature->getChromosome()->getColor();
-	SDL_FRect creatureArea = { creature->getX() - creature->getChromosome()->getSize(), creature->getY() - creature->getChromosome()->getSize(), creature->getChromosome()->getSize() * 2, creature->getChromosome()->getSize() * 2 };
+	Color creatureColor = creature->getChromosome()->color;
+	SDL_FRect creatureArea = { creature->getX() - creature->getChromosome()->size, creature->getY() - creature->getChromosome()->size, creature->getChromosome()->size * 2, creature->getChromosome()->size * 2 };
 
-	if (creature->getChromosome()->getPredator()) {
+	if (creature->getChromosome()->isPredator) {
 		SDL_SetTextureColorMod(hunterTexture, creatureColor.r, creatureColor.g, creatureColor.b);
 		SDL_RenderTexture(renderer, hunterTexture, nullptr, &creatureArea);
 	} else {
@@ -44,7 +21,7 @@ void RenderWindow::drawCreature(Creature* creature) {
 void RenderWindow::drawFoodSource(Food* foodSource) {
 	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 10);
 
-	drawCircle(foodSource->getX(), foodSource->getY(), foodSource->getCapacity());
+	SDL_FillCircle(renderer, foodSource->getX(), foodSource->getY(), foodSource->getCapacity());
 }
 
 void RenderWindow::drawText(const string& message, const float& x, const float& y) {
@@ -69,7 +46,7 @@ void RenderWindow::checkCollision(Generation* generation) {
 		Creature* creature = generation->getCreaturePool()[i];
 		for (int j = 0; j < generation->getNoFoodSources(); j++) {
 			Food* foodSource = generation->getFoodSources()[j];
-			if (distanceBetweenTwoPoints(creature->getX(), creature->getY(), foodSource->getX(), foodSource->getY()) <= creature->getChromosome()->getSize() + foodSource->getCapacity()) {
+			if (distanceBetweenTwoPoints(creature->getX(), creature->getY(), foodSource->getX(), foodSource->getY()) <= creature->getChromosome()->size + foodSource->getCapacity()) {
 				creature->consumeFood();
 				foodSource->decreaseCapacity();
 			}
@@ -82,11 +59,11 @@ void RenderWindow::checkCreaturesCollision(Generation* generation) {
 		Creature* creature1 = generation->getCreaturePool()[i];
 		for (int j = i + 1; j < generation->getNoCreatures(); j++) {
 			Creature* creature2 = generation->getCreaturePool()[j];
-			if (distanceBetweenTwoPoints(creature1->getX(), creature1->getY(), creature2->getX(), creature2->getY()) <= creature1->getChromosome()->getSize() + creature2->getChromosome()->getSize()) {
-				if (creature1->getChromosome()->getPredator() && creature1->getChromosome()->getStrength() > creature2->getChromosome()->getStrength()) {
+			if (distanceBetweenTwoPoints(creature1->getX(), creature1->getY(), creature2->getX(), creature2->getY()) <= creature1->getChromosome()->size + creature2->getChromosome()->size) {
+				if (creature1->getChromosome()->isPredator && creature1->getChromosome()->strength > creature2->getChromosome()->strength) {
 					creature1->consumeFood();
 					generation->killCreature(j);
-				} else if (creature2->getChromosome()->getPredator() && creature2->getChromosome()->getStrength() > creature1->getChromosome()->getStrength()) {
+				} else if (creature2->getChromosome()->isPredator && creature2->getChromosome()->strength > creature1->getChromosome()->strength) {
 					creature2->consumeFood();
 					generation->killCreature(i);
 				}
@@ -123,6 +100,8 @@ RenderWindow::RenderWindow(const char* title, int width, int height) : window(nu
 }
 
 RenderWindow::~RenderWindow() {
+	SDL_DestroyTexture(preyTexture);
+	SDL_DestroyTexture(hunterTexture);
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 	TTF_CloseFont(font);
