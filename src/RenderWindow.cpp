@@ -27,7 +27,7 @@ void RenderWindow::drawFoodSource(Food* foodSource) {
 void RenderWindow::drawText(const string& message, const float& x, const float& y) {
 	SDL_Color white = { 255, 255, 255 };
 	
-	SDL_Surface* messageSurface = TTF_RenderUTF8_Solid(font, message.c_str(), white);
+	SDL_Surface* messageSurface = TTF_RenderText_Solid(font, message.c_str(), message.length(), white);
 	SDL_Texture* messageTexture = SDL_CreateTextureFromSurface(renderer, messageSurface);
 	SDL_FRect messageArea = { x, y, (float) messageSurface->w, (float) messageSurface->h };
 
@@ -78,23 +78,19 @@ RenderWindow::RenderWindow(const char* title, int width, int height) : window(nu
 		cout << "Window failed to initialize. Error " << SDL_GetError() << endl;
 	}
 	else {
-		renderer = SDL_CreateRenderer(window, nullptr, SDL_RENDERER_ACCELERATED);
+		renderer = SDL_CreateRenderer(window, nullptr);
 		if (renderer == nullptr) {
 			cout << "Renderer failed to initialize. Error " << SDL_GetError() << endl;
 		} else if (TTF_Init() == -1) {
-			cout << "Failed to initialize TTF. Error " << TTF_GetError() << endl;
+			cout << "Failed to initialize TTF. Error " << SDL_GetError() << endl;
 		} else {
 			font = TTF_OpenFont("res/ui_font.ttf", 16);
 			if (font == nullptr) {
-				cout << "Failed to load font. Error " << TTF_GetError() << endl;
+				cout << "Failed to load font. Error " << SDL_GetError() << endl;
 			}
 		}
-		if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
-			cout << "Failed to initialize IMG. Error " << SDL_GetError() << endl;
-		} else {
-			preyTexture = IMG_LoadTexture(renderer, "res/prey.png");
-			hunterTexture = IMG_LoadTexture(renderer, "res/hunter.png");
-		}
+		preyTexture = IMG_LoadTexture(renderer, "res/prey.png");
+		hunterTexture = IMG_LoadTexture(renderer, "res/hunter.png");
 	}
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 }

@@ -3,7 +3,7 @@
 #include "model/Creature.hpp"
 #include "model/Food.hpp"
 
-#include "SDL.h"
+#include "SDL3/SDL.h"
 
 #include <cstdlib>
 

@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
 
 		Uint64 end = SDL_GetPerformanceCounter();
 		float elapsedTime = (end - start) / (float)SDL_GetPerformanceFrequency() * 1000.0f;
-		SDL_Delay(floor(33.333f - elapsedTime));
+		SDL_Delay(SDL_floor(33.333f - elapsedTime));
 	}
 
 	delete generation;
