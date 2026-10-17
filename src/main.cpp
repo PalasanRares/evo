@@ -4,6 +4,9 @@
 #include <iostream>
 #include <cstdlib>
 
+#define SDL_MAIN_USE_CALLBACKS
+#include "SDL3/SDL_main.h"
+
 #include "RenderWindow.hpp"
 #include "model/Creature.hpp"
 #include "service/Generation.hpp"
@@ -14,46 +17,51 @@
 #define MINOR 1
 #define PATCH 0
 
-int main(int argc, char** argv) {
-	const char* title = "Evo 0.1.0";
-	const int width = 1280;
-	const int height = 720;
-	RenderWindow* window = new RenderWindow(title, width, height);
-	bool running = true;
+const char* title = "Evo 0.1.0";
+const int width = 1280;
+const int height = 720;
 
-	SDL_Event event;
+RenderWindow* renderWindow;
+Generation* generation;
 
-	Generation* generation = new Generation(width, height, 20, 10);
+SDL_AppResult SDL_AppInit(void** appstate, int argc, char** argv) {
+	renderWindow = new RenderWindow(title, width, height);
 
-	while (running) {
-		Uint64 start = SDL_GetPerformanceCounter();
+	generation = new Generation(width, height, 20, 10);
 
-		while (SDL_PollEvent(&event)) {
-			switch (event.type) {
-				case SDL_EVENT_QUIT:
-					running = false;
-					break;
-			}
-		}
+	return SDL_APP_CONTINUE;
+}
 
-		window->clear();
+SDL_AppResult SDL_AppIterate(void* appstate) {
+	Uint64 start = SDL_GetPerformanceCounter();
 
-		window->renderGeneration(generation);
+	renderWindow->clear();
 
-		window->display();
+	renderWindow->renderGeneration(generation);
 
-		if (generation->getElapsedTime() > GENERATION_TIME) {
-			Generation* oldGeneration = generation;
-			generation = generation->createNewGeneration(width, height);
-			delete oldGeneration;
-		}
+	renderWindow->display();
 
-		Uint64 end = SDL_GetPerformanceCounter();
-		float elapsedTime = (end - start) / (float)SDL_GetPerformanceFrequency() * 1000.0f;
-		SDL_Delay(SDL_floor(33.333f - elapsedTime));
+	if (generation->getElapsedTime() > GENERATION_TIME) {
+		Generation* oldGeneration = generation;
+		generation = generation->createNewGeneration(width, height);
+		delete oldGeneration;
 	}
 
+	Uint64 end = SDL_GetPerformanceCounter();
+	float elapsedTime = (end - start) / (float)SDL_GetPerformanceFrequency() * 1000.0f;
+	SDL_Delay(SDL_floor(33.333f - elapsedTime));
+
+	return SDL_APP_CONTINUE;
+}
+
+SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event) {
+    if (event->common.type == SDL_EVENT_QUIT) {
+        return SDL_APP_SUCCESS;
+    }
+    return SDL_APP_CONTINUE;
+}
+
+void SDL_AppQuit(void* appstate, SDL_AppResult result) { 
 	delete generation;
-	delete window;
-	return 0;
+	delete renderWindow;
 }
